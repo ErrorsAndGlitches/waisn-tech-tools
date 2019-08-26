@@ -94,9 +94,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/www/data/static/'
 
 # BEGIN Auth0
-WAISN_AUTH_DISABLED = environ.get('WAISN_AUTH_DISABLED', False)
+WAISN_AUTH_ENABLED = environ.get('WAISN_AUTH_ENABLED', "True").lower() == "true"
+print("Authentication enabled? {}".format(WAISN_AUTH_ENABLED))
 
 
 def environ_var(key):
@@ -115,11 +117,12 @@ SOCIAL_AUTH_AUTH0_KEY = environ_var('AUTH0_KEY')
 SOCIAL_AUTH_AUTH0_SECRET = environ_var('AUTH0_SECRET')
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
-    'profile'
+    'profile',
+    'email'
 ]
 
 AUTHENTICATION_BACKENDS = {
-    'alerts.auth0backend.Auth0',
+    'social_core.backends.auth0.Auth0OAuth2',
     'django.contrib.auth.backends.ModelBackend'
 }
 

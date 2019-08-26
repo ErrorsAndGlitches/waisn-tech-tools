@@ -60,7 +60,7 @@ setting the environment variable:
 
 ```
 # disable Auth0 login requirement
-export WAISN_AUTH_DISABLED='TRUE'
+export WAISN_AUTH_ENABLED='FALSE'
 ```
 
 # Running the Server in Production
@@ -79,11 +79,11 @@ python ./manage.py runserver --settings waisntechtools.settings.production
 There are additional environment settings that need to be set:
 
 * `DJANGO_SECRET_KEY`: See [Django SECRET_KEY Docs][]
-* `DB_HOSTNAME`: database hostname
-* `DB_PORT`: port the database server is listening on
-* `DB_NAME`: name of database to use
-* `DB_USERNAME`: username used to access the database
-* `DB_PASSWORD`: password used to access the database
+* `RDS_HOSTNAME`: database hostname
+* `RDS_PORT`: port the database server is listening on
+* `RDS_DB_NAME`: name of database to use
+* `RDS_USERNAME`: username used to access the database
+* `RDS_PASSWORD`: password used to access the database
 
 [Django SECRET_KEY Docs]: https://docs.djangoproject.com/en/2.2/ref/settings/#std:setting-SECRET_KEY
 
@@ -120,7 +120,7 @@ you can spin up a [MariaDB Docker container][].
 # spin up the MariaDB container port forwarding 5000 on the local host to 3306 in the Docker container
 docker run -p 5000:3306 --rm --name waisn-mariadb -e MYSQL_ROOT_PASSWORD=pw -d mariadb:latest
 # verify that we can connect to it using the MySQL client (you will be prompted to put in the password)
-mysql -h localhost -P 5000 -u root -p
+mysql -h 127.0.0.1 -P 5000 -u root -p
 # create the database used by the service
 MariaDB [(none)]> create database waisntechtools;
 ```
@@ -131,19 +131,19 @@ as the DB:
 ```
 # run the needed migrations
 export DJANGO_SECRET_KEY=KEY; \
-  export DB_HOSTNAME=127.0.0.1; \
-  export DB_PORT=5000; \
-  export DB_NAME=waisntechtools; \
-  export DB_USERNAME=root; \
-  export DB_PASSWORD=pw; \
+  export RDS_HOSTNAME=127.0.0.1; \
+  export RDS_PORT=5000; \
+  export RDS_DB_NAME=waisntechtools; \
+  export RDS_USERNAME=root; \
+  export RDS_PASSWORD=pw; \
   python manage.py migrate --settings waisntechtools.settings.production
 # run the server
 export DJANGO_SECRET_KEY=KEY; \
-  export DB_HOSTNAME=127.0.0.1; \
-  export DB_PORT=5000; \
-  export DB_NAME=waisntechtools; \
-  export DB_USERNAME=root; \
-  export DB_PASSWORD=pw; \
+  export RDS_HOSTNAME=127.0.0.1; \
+  export RDS_PORT=5000; \
+  export RDS_DB_NAME=waisntechtools; \
+  export RDS_USERNAME=root; \
+  export RDS_PASSWORD=pw; \
   python manage.py runserver --settings waisntechtools.settings.production
 ```
 
@@ -162,12 +162,15 @@ We can then use this IP address to connect the WAISN Docker container to the Mar
 # authentication, the Auth0 tables need to be created.
 # Notice that we use the port in the Docker network instead of the one exposed on the host.
 docker run -p 8000:8000 --rm -d \
-    -e DJANGO_SECRET_KEY=KEY \
-    -e DB_PORT=3306 \
-    -e DB_NAME=waisntechtools \
-    -e DB_USERNAME=root \
-    -e DB_PASSWORD=pw \
-    -e DB_HOSTNAME=${DB_CONTAINER_IP_ADDR} \
+    -e AUTH0_DOMAIN=VALUE \
+    -e AUTH0_KEY=VALUE \
+    -e AUTH0_SECRET=VALUE \
+    -e DJANGO_SECRET_KEY=VALUE \
+    -e RDS_HOSTNAME=${DB_CONTAINER_IP_ADDR} \
+    -e RDS_PORT=3306 \
+    -e RDS_DB_NAME=waisntechtools \
+    -e RDS_USERNAME=root \
+    -e RDS_PASSWORD=pw \
     ${IMAGE_ID}
 ```
 

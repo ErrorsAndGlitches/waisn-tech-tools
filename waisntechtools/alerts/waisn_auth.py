@@ -10,9 +10,9 @@ def waisn_auth(view_func):
     """
     @wraps(view_func)
     def _waisn_auth_decorator(request, *args, **kwargs):
-        if settings.WAISN_AUTH_DISABLED:
-            return view_func(request)
-        else:
+        if settings.WAISN_AUTH_ENABLED:
             return login_required()(view_func)(request, *args, **kwargs)
+        else:
+            return view_func(request)
 
     return _waisn_auth_decorator

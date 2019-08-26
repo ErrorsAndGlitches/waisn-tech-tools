@@ -22,42 +22,36 @@ RUN . /opt/conda/etc/profile.d/conda.sh && \
     python manage.py test
 
 # expose runtime port - exposing debug port for now until creating production configuration
-EXPOSE $SERVER_PORT
+# the environment variable can't be used here because Elastic Beanstalk parses the Dockerfile for port information,
+# which is some bullshit because it should get it from Dockerrun.aws.json
+EXPOSE 8000
 
 # set up some environment variables
 ENV AUTH0_DOMAIN AUTH0_DOMAIN
 ENV AUTH0_KEY AUTH0_KEY
 ENV AUTH0_SECRET AUTH0_SECRET
 
-# run migrations
-RUN . /opt/conda/etc/profile.d/conda.sh && \
-    conda activate waisn-tech-tools && \
-    python manage.py migrate
-
 # build development image
 FROM waisntechtools-base as waisntechtools-dev
 LABEL waisntechtools-image-type=dev
-ENV WAISN_AUTH_DISABLED TRUE
+ENV WAISN_AUTH_ENABLED FALSE
 ENTRYPOINT . /opt/conda/etc/profile.d/conda.sh && \
     conda activate waisn-tech-tools && \
     python manage.py runserver 0.0.0.0:$SERVER_PORT
 
+# run migrations only for development image - production image will be done as part of deployment
+RUN . /opt/conda/etc/profile.d/conda.sh && \
+    conda activate waisn-tech-tools && \
+    python manage.py migrate
+
 # build production image
 FROM waisntechtools-base as waisntechtools-prod
 LABEL waisntechtools-image-type=prod
-ENV WAISN_AUTH_DISABLED FALSE
 
+ENV WAISN_AUTH_ENABLED TRUE
+
+# these variable should be overridden in the Elastic Beanstalk environment
 ENV DJANGO_SECRET_KEY DJANGO_SECRET_KEY
-ENV DB_HOSTNAME DB_HOSTNAME
-ENV DB_PORT DB_PORT
-ENV DB_NAME DB_NAME
-ENV DB_USERNAME DB_USERNAME
-ENV DB_PASSWORD DB_PASSWORD
-
-# set up the static files to be served by web server
-RUN . /opt/conda/etc/profile.d/conda.sh && \
-    conda activate waisn-tech-tools && \
-    python manage.py collectstatic --settings waisntechtools.settings.production
 
 ENTRYPOINT . /opt/conda/etc/profile.d/conda.sh && \
     conda activate waisn-tech-tools && \

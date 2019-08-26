@@ -8,7 +8,7 @@ from django.urls import reverse
 from alerts.tests.fakes import SubscriberFactory
 
 
-@override_settings(WAISN_AUTH_DISABLED=True, DEBUG=True)
+@override_settings(WAISN_AUTH_ENABLED=False, DEBUG=True)
 class IndexViewTests(TestCase):
     _STATIC_PREFIX = '/static/'
 
@@ -31,7 +31,7 @@ class IndexViewTests(TestCase):
         return resource.startswith(IndexViewTests._STATIC_PREFIX)
 
 
-@override_settings(WAISN_AUTH_DISABLED=True, DEBUG=True)
+@override_settings(WAISN_AUTH_ENABLED=False, DEBUG=True)
 class DebugViewTests(TestCase):
     def setUp(self):
         call_command(flush.Command(), interactive=False)
@@ -49,7 +49,7 @@ class DebugViewTests(TestCase):
         self.assertEqual(len(response.context['subscribers']), 10)
 
 
-@override_settings(WAISN_AUTH_DISABLED=True, DEBUG=True)
+@override_settings(WAISN_AUTH_ENABLED=False, DEBUG=True)
 class AlertViewTests(TestCase):
     def test_alert_notification_page(self):
         response = self.client.get(reverse('alerts:alert'))
@@ -67,7 +67,7 @@ class AlertViewTests(TestCase):
         self.assertContains(response, 'Alert Notification Successfully Sent')
 
 
-@override_settings(WAISN_AUTH_DISABLED=True, DEBUG=True)
+@override_settings(WAISN_AUTH_ENABLED=False, DEBUG=True)
 class FollowUpViewTests(TestCase):
     def test_follow_up_page(self):
         response = self.client.get(reverse('alerts:follow_up'))

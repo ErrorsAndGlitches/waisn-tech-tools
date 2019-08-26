@@ -1,0 +1,18 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "errorsandglitches/waisn-tech-tools-prod"
+  },
+  "Ports": [
+    {
+      "ContainerPort": 8000,
+      "HostPort": 8000
+    }
+  ],
+  "Volumes": [
+    {
+      "HostDirectory": "/www/data/static/",
+      "ContainerDirectory": "/www/data/static/"
+    }
+  ]
+}
