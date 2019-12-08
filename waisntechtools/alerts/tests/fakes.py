@@ -52,6 +52,10 @@ class _LanguageProvider(BaseProvider):
             self._rand.randrange(0, len(_LanguageProvider._LANGUAGES))
         ]
 
+class Message(DjangoModelFactory):
+    message_from = Faker('phone_number')
+
+
 
 Faker.add_provider(_SubscriptionStateProvider)
 Faker.add_provider(_LanguageProvider)

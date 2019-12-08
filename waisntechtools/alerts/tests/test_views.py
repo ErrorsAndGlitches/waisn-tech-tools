@@ -4,6 +4,7 @@ from django.core.management import call_command
 from django.core.management.commands import flush
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from unittest.mock import patch, Mock
 
 from alerts.tests.fakes import SubscriberFactory
 
@@ -39,7 +40,12 @@ class DebugViewTests(TestCase):
     def tearDown(self):
         call_command(flush.Command(), interactive=False)
 
-    def test_list_length(self):
+    @patch("alerts.twilio.TwilioClientFactory.new_client")
+    def test_list_length(self, mock_new_client):
+        mock_client = Mock()
+        mock_client.messages.list.return_value = []
+        mock_new_client.return_value = mock_client
+
         num_subscribers = 10
         for _ in range(0, num_subscribers):
             SubscriberFactory.create()

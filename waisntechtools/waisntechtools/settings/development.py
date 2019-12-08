@@ -7,7 +7,7 @@ from waisntechtools.settings.common import *
 SECRET_KEY = 'n2+o$1^tiwv)s2jx@rsn1-rkv(r@0x1-e&jsp2r-@v8pye8ydt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.ngrok.io', '127.0.0.1']
 
 DATABASES = {
     'default': {

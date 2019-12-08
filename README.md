@@ -52,6 +52,9 @@ application should be configured to be a **Regular Web Application**.
 * `AUTH0_DOMAIN`: The Auth0 application's domain
 * `AUTH0_KEY`: The Auth0 application's client id
 * `AUTH0_SECRET`: The Auth0 application's client secret.
+* `TWILIO_ACCOUNT_SID`: Twilio Account SID for client
+* `TWILIO_AUTH_TOKEN`: Twilio Auth Token for client
+* `TWILIO_SMS_NUMBER`: Phone number bought through Twilio for client
 
 ## Disabling Auth0
 
@@ -62,6 +65,33 @@ setting the environment variable:
 # disable Auth0 login requirement
 export WAISN_AUTH_ENABLED='FALSE'
 ```
+
+## Setting up Twilio
+
+You can set up a free Twilio account and then get a trial number, which is also free. You will then use the account
+credentials (the account SID & auth token) and the SMS number as environment variables.
+
+If you are running this locally, then you will need to create a tunnel from a public end-point to the local service. We
+recommend using [ngrok][] to do so, which is free. Start ngrok after spinning up the service:
+
+```
+# start the service
+python manage.py runserver
+# create a tunnel to the port that Django starts on
+ngrok http 8000
+```
+
+A dashboard will start in the terminal providing the forwarding DNS e.g. **http://6c465057.ngrok.io**. Using this DNS,
+go to the Twilio console:
+
+1. Go to **Phone Numbers**
+1. Click the number that you are using for Twilio
+1. Go to the **Messaging** section
+1. Change the value of the webhook for **A MESSAGE COMES IN** to **${NGROK_DNS}/alerts/subscribe**
+
+You can now send messages to that phone number and interact with the Django Service.
+
+[ngrok]: https://ngrok.com/
 
 # Running the Server in Production
 

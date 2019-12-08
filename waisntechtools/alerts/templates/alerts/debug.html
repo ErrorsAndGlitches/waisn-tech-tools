@@ -3,9 +3,27 @@
 {% block content %}
     <h1>Debug Page</h1>
     <br/>
+
+    <h2>Subscribers</h2>
     <ul>
         {% for subscriber in subscribers %}
-        <li>{{ subscriber }}</li>
+            <li>{{ subscriber }}</li>
         {% endfor %}
     </ul>
+
+    <h2>Twilio Messages</h2>
+    <table>
+        <tr>
+            <th>To</th>
+            <th>From</th>
+            <th>Message</th>
+        </tr>
+        {% for message in messages %}
+            <tr>
+                <td>{{ message.to }}</td>
+                <td>{{ message.from_ }}</td>
+                <td>{{ message.body }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

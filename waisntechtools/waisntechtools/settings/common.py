@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'social_django',
+    'twilio'
 ]
 
 MIDDLEWARE = [
@@ -120,6 +121,10 @@ SOCIAL_AUTH_AUTH0_SCOPE = [
     'profile',
     'email'
 ]
+
+TWILIO_ACCOUNT_SID = environ_var('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = environ_var('TWILIO_AUTH_TOKEN')
+TWILIO_SMS_NUMBER = environ_var('TWILIO_SMS_NUMBER')
 
 AUTHENTICATION_BACKENDS = {
     'social_core.backends.auth0.Auth0OAuth2',

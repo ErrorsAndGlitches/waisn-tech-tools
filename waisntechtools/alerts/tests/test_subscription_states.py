@@ -58,7 +58,7 @@ class SubscriptionStateTestCase(TestCase):
     @staticmethod
     def subscriber(state) -> Subscriber:
         sub = Mock()
-        sub.state = state
+        sub.subscription_state = state
         sub.language = Language.ENGLISH
         sub.phone_number = "+11234567890"
         return sub
@@ -68,6 +68,6 @@ class SubscriptionStateTestCase(TestCase):
 
         for index, filename in enumerate(filenames):
             self.assertEqual(
-                self._msgr.send.call_args[0][0][index],
+                self._msgr.send.call_args[0][1][index],
                 filename
             )

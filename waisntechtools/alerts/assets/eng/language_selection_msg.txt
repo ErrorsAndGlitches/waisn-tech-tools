@@ -1,6 +1,6 @@
 Select your preferred language:
-Text "1" for English
-# Responda escribiendo "2" para recibir mensajes en español
-# 한국어 수신은 "3"
-# 中文短信請發"4"
-# Gửi tin nhắn số "5" để yêu cầu ngôn ngữ tiếng Việt.
+> Text "1" for English
+> Responda escribiendo "2" para recibir mensajes en español
+> 한국어 수신은 "3"
+> 中文短信請發"4"
+> Gửi tin nhắn số "5" để yêu cầu ngôn ngữ tiếng Việt.
