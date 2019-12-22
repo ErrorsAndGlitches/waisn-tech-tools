@@ -1,4 +1,5 @@
 from unittest.mock import Mock, mock_open, patch
+from tempfile import NamedTemporaryFile
 
 from django.test import TestCase
 
@@ -20,13 +21,9 @@ class MessengerTestCase(TestCase):
 
 
 class MessageTestCase(TestCase):
-    def setUp(self):
-        self.mocked_response = mock_open(read_data='The test has completed')
-
     def test_message(self):
-        with patch('builtins.open', self.mocked_response, create=True) as f:
-            read_message = Message(self.mocked_response).contents()
-        self.assertEqual(read_message, 'The test has completed')
-
-    def tearDown(self):
-        self.mocked_response = None
+        with NamedTemporaryFile() as f:
+            f.write('The test has completed'.encode('utf-8'))
+            f.flush()
+            read_message = Message(f.name).contents()
+            self.assertEqual(read_message, 'The test has completed')

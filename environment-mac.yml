@@ -39,6 +39,7 @@ dependencies:
   - pytz=2018.7=py37_0
   - readline=7.0=h1de35cc_5
   - s3transfer=0.2.1=py37_0
+  - selenium=3.141.0=py37h1de35cc_0
   - setuptools=40.6.3=py37_0
   - six=1.12.0=py37_0
   - soupsieve=1.7.1=py37_0
@@ -49,8 +50,11 @@ dependencies:
   - xz=5.2.4=h1de35cc_4
   - zlib=1.2.11=h1de35cc_3
   - pip:
+    - babel==2.7.0
     - chardet==3.0.4
     - defusedxml==0.6.0
+    - django-phonenumber-field==4.0.0
+    - django-twilio==0.11.0
     - oauthlib==3.0.1
     - pyjwt==1.7.1
     - python-dotenv==0.10.2

@@ -7,3 +7,5 @@ db.sqlite3
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+geckodriver.log

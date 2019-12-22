@@ -15,6 +15,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 """
 
 import os
+import sys
 from os import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -97,7 +98,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/www/data/static/'
 
-TEST = environ.get('TEST', "False").lower() == "true"
+TEST = 'test' in sys.argv
 
 # BEGIN Auth0
 WAISN_AUTH_ENABLED = environ.get('WAISN_AUTH_ENABLED', "True").lower() == "true"
@@ -107,8 +108,7 @@ print("Authentication enabled? {}".format(WAISN_AUTH_ENABLED))
 def environ_var(key):
     """Used to allow tests to run without having to set the environment variables. If this gets unwieldy, we should
     think about having a separate test settings file. If testing mode, returns the key name as the value."""
-    import sys
-    if 'test' in sys.argv:
+    if TEST:
         return key
     else:
         return environ[key]

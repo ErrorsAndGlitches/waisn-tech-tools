@@ -1,14 +1,13 @@
+import logging
+from string import Template
+from unittest.mock import Mock
+
+import boto3
+from django.conf import settings
+
 from alerts.asset_files import AssetFiles
 from alerts.messenger import Message
 from alerts.models import Subscriber
-
-from unittest.mock import patch, Mock
-from django.conf import settings
-from string import Template
-import boto3
-
-import logging
-
 from alerts.subscription_states import SubscriptionStates
 
 logger = logging.getLogger(__name__)

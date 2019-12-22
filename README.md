@@ -21,6 +21,9 @@ source activate waisn-tech-tools
 source deactivate
 ```
 
+The integration tests use Selenium with the Firefox browser running in headless mode. You will need to install
+**geckodriver** to run these tests.
+
 [Anaconda]: https://www.anaconda.com/
 
 # Updating the Environment
