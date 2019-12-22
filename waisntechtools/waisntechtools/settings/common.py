@@ -97,6 +97,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/www/data/static/'
 
+TEST = environ.get('TEST', "False").lower() == "true"
+
 # BEGIN Auth0
 WAISN_AUTH_ENABLED = environ.get('WAISN_AUTH_ENABLED', "True").lower() == "true"
 print("Authentication enabled? {}".format(WAISN_AUTH_ENABLED))

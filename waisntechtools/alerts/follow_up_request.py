@@ -8,6 +8,8 @@ from alerts.models import Subscriber
 from alerts.subscription_states import SubscriptionStates
 from alerts.views import get_post_request
 from alerts.waisn_auth import waisn_auth
+from alerts.mass_notification import MassNotification, Notification
+from alerts.asset_files import AssetFiles
 
 
 @waisn_auth
@@ -27,6 +29,14 @@ def _follow_up_form_submission(request):
     form = FollowUpRequestForm(request.POST)
     if not form.is_valid():
         return HttpResponseBadRequest('Invalid form input')
+    data = form.cleaned_data
+    MassNotification.create().send(Notification(
+        AssetFiles.follow_up_file,
+        {
+            'num_people': data['num_people'], 'city': data['city'], 'target_name': data['target_name'],
+            'target_phone_num': data['target_phone_num']
+        }
+    ))
     return HttpResponseRedirect(reverse('alerts:follow_up_sent'))
 
 

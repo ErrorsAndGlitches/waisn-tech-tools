@@ -30,9 +30,30 @@ If you are installing new packages, you will want to update the environment file
 ```
 # install new package
 conda install new-package-name
-# update environment file
-conda env export > ./environment.yml
+# update environment file for mac environment
+conda env export > ./environment-mac.yml
 # please remove the "prefix" key from the file
+```
+
+There is a separate environment file for the Docker image. This is because the library versions are different for the
+different OS's. The Docker image is built on top of the Ubuntu base image and hence the library versions in the file
+refer to Linux versions. Updating this file requires a few more steps compared to updaing the environment for local
+development:
+
+```
+# run the Docker image but using a shell as the entry point
+docker run -ti --entrypoint /bin/bash ${IMAGE_ID}
+# you should be in a shell in the Docker container at this point
+# activate the Conda env
+conda activate waisn-tech-tools
+conda install ${NEW_PKG}
+# update the environment file
+cd /opt/waisn-tech-tools/
+conda env export > environment-docker.yml
+exit
+# you should now be in the local host's shell
+docker cp ${CONTAINER_ID}:/opt/waisn-tech-tools/environment-docker.yml .
+# edit file to remove **prefix** section
 ```
 
 # Project Commands

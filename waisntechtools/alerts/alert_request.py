@@ -8,6 +8,8 @@ from alerts.models import Subscriber
 from alerts.subscription_states import SubscriptionStates
 from alerts.views import get_post_request
 from alerts.waisn_auth import waisn_auth
+from alerts.mass_notification import MassNotification, Notification
+from alerts.asset_files import AssetFiles
 
 
 @waisn_auth
@@ -27,6 +29,8 @@ def _alert_form_submission(request):
     form = AlertRequestForm(request.POST)
     if not form.is_valid():
         return HttpResponseBadRequest('Invalid form input')
+    data = form.cleaned_data
+    MassNotification.create().send(Notification(AssetFiles.action_alert_file, {'address': data['address']}))
     return HttpResponseRedirect(reverse('alerts:alert_sent'))
 
 
