@@ -14,7 +14,8 @@ class SubscriberFactory(DjangoModelFactory):
     phone_number = Faker('phone_number')
     language = Faker('language')
     subscription_state = Faker('subscription_state')
-    date_registered = Faker('date_time', tzinfo=timezone.get_current_timezone())
+    date_registered = Faker(
+        'date_time', tzinfo=timezone.get_current_timezone())
 
 
 class _SubscriptionStateProvider(BaseProvider):

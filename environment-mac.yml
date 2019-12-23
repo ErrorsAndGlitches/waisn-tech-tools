@@ -42,10 +42,15 @@ dependencies:
   - xz=5.2.4=h1de35cc_4
   - zlib=1.2.11=h1de35cc_3
   - pip:
+    - babel==2.7.0
     - chardet==3.0.4
     - defusedxml==0.6.0
+    - django-phonenumber-field==3.0.1
+    - django-twilio==0.10.0
     - oauthlib==3.0.1
+    - phonenumbers==8.11.0
     - pyjwt==1.7.1
+    - pysocks==1.6.8
     - python-dotenv==0.10.2
     - python3-openid==3.1.0
     - requests==2.22.0
@@ -53,4 +58,7 @@ dependencies:
     - social-auth-app-django==3.1.0
     - social-auth-core==3.1.0
     - transitions==0.6.9
+    - twilio==6.24.1
     - urllib3==1.25.3
+prefix: //anaconda3/envs/waisn-tech-tools
+

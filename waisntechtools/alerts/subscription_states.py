@@ -1,5 +1,7 @@
 from transitions import Machine
+from twilio.rest import Client
 
+from django.conf import settings
 from .asset_files import AssetFiles
 
 
@@ -67,23 +69,25 @@ class SubscriptionStates(object):
     ]
 
     def __init__(self, subscriber, messenger):
-        if subscriber.state not in SubscriptionStates._STATES:
-            raise Exception("Unknown state: {}".format(subscriber.state))
+        if subscriber.subscription_state not in SubscriptionStates._STATES:
+            raise Exception("Unknown state: {}".format(
+                subscriber.subscription_state))
 
         self._subscriber = subscriber
         self._machine = Machine(
             model=self,
             states=SubscriptionStates._STATES,
-            initial=subscriber.state,
+            initial=subscriber.subscription_state,
             transitions=SubscriptionStates._TRANSITIONS
         )
         self._messenger = messenger
 
     def _subscribe_help(self):
-        self._send_msgs([AssetFiles(self._subscriber.language).subscribe_help_file()])
+        self._send_msgs(
+            [AssetFiles(self._subscriber.language).subscribe_help_file()])
 
     def _start_subscription(self):
-        self._subscriber.state = SubscriptionStates.SELECTING_LANG_STATE
+        self._subscriber.subscription_state = SubscriptionStates.SELECTING_LANG_STATE
         self._subscriber.save()
         self._send_msgs([
             AssetFiles(self._subscriber.language).welcome_file(),
@@ -97,24 +101,25 @@ class SubscriptionStates(object):
         ])
 
     def _lang_selected(self, iso_code):
-        self._subscriber.state = SubscriptionStates.COMPLETE_STATE
+        self._subscriber.subscription_state = SubscriptionStates.COMPLETE_STATE
         self._subscriber.language = iso_code
         self._subscriber.save()
-        self._send_msgs([AssetFiles(self._subscriber.language).confirmation_file()])
+        self._send_msgs(
+            [AssetFiles(self._subscriber.language).confirmation_file()])
 
     def _complete_state_help(self):
         self._send_msgs([AssetFiles(self._subscriber.language).error_file()])
 
     def _reselect_language(self):
-        self._subscriber.state = SubscriptionStates.SELECTING_LANG_STATE
+        self._subscriber.subscription_state = SubscriptionStates.SELECTING_LANG_STATE
         self._subscriber.save()
-        self._send_msgs([AssetFiles(self._subscriber.language).lang_select_file()])
+        self._send_msgs(
+            [AssetFiles(self._subscriber.language).lang_select_file()])
 
     def _end_subscription(self):
-        self._send_msgs([AssetFiles(self._subscriber.language).unsubscribe_file()])
+        self._send_msgs(
+            [AssetFiles(self._subscriber.language).unsubscribe_file()])
         self._subscriber.delete()
 
     def _send_msgs(self, filenames):
-        # TODO: add twilo hook here, we possibly want to refactor AssetFiles to provide the actual message rather
-        # than a file name hook
-        self._messenger.send(filenames)
+        self._messenger.send(self._subscriber, filenames)

@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 from alerts.models import Subscriber
 from alerts.waisn_auth import waisn_auth
+
+from .get_twilio_cred import get_twilio_cred
 
 
 def get_post_request(get_handler, post_handler):
@@ -25,10 +27,17 @@ def debug(request):
     return DebugView.as_view()(request)
 
 
-class DebugView(ListView):
-    model = Subscriber
+class DebugView(TemplateView):
     template_name = 'alerts/debug.html'
-    context_object_name = 'subscribers'
 
-    def get_queryset(self):
-        return Subscriber.objects.order_by('-date_registered')
+    def recent_twilio_messages(self):
+        client = get_twilio_cred()
+        messages_list = client.messages.list(limit=10)
+        return messages_list
+
+    def get_context_data(self, **kwargs):
+        context = super(DebugView, self).get_context_data(**kwargs)
+        context['messages'] = self.recent_twilio_messages()
+        context['subscribers'] = Subscriber.objects.order_by(
+            '-date_registered')
+        return context

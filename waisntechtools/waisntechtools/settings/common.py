@@ -18,7 +18,8 @@ import os
 from os import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 # Application definition
 
@@ -31,6 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'social_django',
+    'twilio',
+    'django_twilio',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +120,10 @@ SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile'
 ]
+
+TWILIO_ACCOUNT_SID = environ_var('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = environ_var('TWILIO_AUTH_TOKEN')
+TWILIO_SMS_NUMBER = environ_var('TWILIO_SMS_NUMBER')
 
 AUTHENTICATION_BACKENDS = {
     'alerts.auth0backend.Auth0',
